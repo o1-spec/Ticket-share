@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+.swiper-pagination-bullet {
+  background-color: #2563eb; /* Blue color for dots */
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #1d4ed8; /* Darker blue for active dot */
+}
+
+@media (min-width: 405px) {
+  .custom-width {
+    width: 20rem; /* w-80 */
+  }
+}
