@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -17,10 +17,11 @@ import {
   Ticket,
   Tickets,
   WarehouseIcon,
+  Info,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { useTickets } from "../_components/TicketContext";
 import Link from "next/link";
 
@@ -52,13 +53,22 @@ interface Ticket {
   eventImage: string | null;
 }
 
-const TicketCardSlider: React.FC = () => {
-  const [showTransfer, setShowTransfer] = useState(false);
+interface TaskCardSlider {
+  setShowTransfer: (value: boolean) => void;
+  showTransfer: boolean;
+}
+
+const TicketCardSlider: React.FC<TaskCardSlider> = ({
+  setShowTransfer,
+  showTransfer,
+}: TaskCardSlider) => {
+  // const [showTransfer, setShowTransfer] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [showTransferForm, setShowTransferForm] = useState(false);
   const { tickets, addTicket } = useTickets();
   console.log(addTicket);
   console.log(tickets);
+  const transferBoxRef = useRef<HTMLDivElement>(null);
 
   const handleSeatToggle = (seatNumber: number) => {
     setSelectedSeats((prevSeats) =>
@@ -76,112 +86,142 @@ const TicketCardSlider: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: { target: any }) => {
+      if (
+        transferBoxRef.current &&
+        !transferBoxRef.current.contains(event.target)
+      ) {
+        console.log("Clicked outside");
+        setShowTransfer(false);
+      }
+    };
+
+    if (showTransfer) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showTransfer]);
+
   return (
     <div className="relative w-full h-full bg-white max-w-md mx-auto">
-      <div
-        className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl h-[80vh] ${
-          showTransfer ? "translate-y-0" : "translate-y-full"
-        } transform`}
-      >
-        <div className="w-full h-full flex flex-col overflow-auto">
-          <div className="border-b border-gray-200">
-            <div className="flex justify-between items-center p-4">
-              <button
+      {showTransfer && (
+        <div
+          className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl h-[65vh] ${
+            showTransfer ? "translate-y-0" : "translate-y-full"
+          } transform`}
+        >
+          <div className="w-full h-full flex flex-col overflow-auto">
+            <div className="border-b border-gray-300">
+              {/* <div className="flex justify-between items-center p-4"> 0e68d9*/}
+              <div className="p-4">
+                {/* <button
                 onClick={() => setShowTransfer(false)}
                 className="text-gray-500"
               >
                 <X size={24} />
-              </button>
-              <p className="text-black text-md font-medium">
-                SELECT TICKETS TO TRANSFER
+              </button> */}
+                <p className="text-black text-md text-center font-bold">
+                  SELECT TICKETS TO TRANSFER
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-3 border border-gray-900 rounded-md w-[95%] mx-auto justify-between p-3 mt-4">
+              <div className="basis-[8%] sm:basis-[0%] translate-y-1 sm:translate-y-0">
+                <FontAwesomeIcon
+                  icon={faCircleInfo}
+                  className="w-7 h-7 text-3xl text-gray-600"
+                />
+              </div>
+              {/* <div className="basis-[8%] sm:basis-[0%] translate-y-1 sm:translate-y-0">
+              <Info className="w-6 h-6 border-none bg-gray-600 text-white rounded-full" />
+            </div> */}
+
+              <p className="text-black sm:text-[16px] text-[17px] basis-[92%] sm:basis-[100%]">
+                Only transfer tickets to people you know and trust to ensure
+                everyone stays safe and socially distanced
               </p>
-              <div className="w-6"></div>
             </div>
-          </div>
-          <div className="flex gap-2 border border-gray-500 rounded-md w-[95%] mx-auto p-3 mt-4">
-            {/* <FontAwesomeIcon icon={faCircleInfo} className="text-gray-400" /> */}
-            <WarehouseIcon />
-            <p className="text-black text-sm">
-              Only transfer tickets to people you know and trust to ensure
-              everyone stays safe.
-            </p>
-          </div>
 
-          <div className="text-gray-500 flex justify-between gap-x-4 w-[95%] mx-auto px-2 mt-4 whitespace-nowrap items-center">
-            <p className="">
-              Sec: {tickets[0]?.section}, Row: {tickets[0]?.row}
-            </p>
-            <div className="flex items-center gap-1 text-sm">
-              <Ticket size={16} />
-              <p>{selectedSeats.length} tickets</p>
+            <div className="text-gray-600 flex justify-between gap-x-4 w-[95%] mx-auto px-2 mt-4 whitespace-nowrap items-center">
+              <p className="text-[18px] sm:text-[15px]">
+                Sec: {tickets[0]?.section}, Row: {tickets[0]?.row}
+              </p>
+              <div className="flex items-center gap-1 text-[18px] sm:text-[15px]">
+                <Ticket size={16} />
+                <p>{selectedSeats.length} tickets</p>
+              </div>
             </div>
-          </div>
 
-          <div className="flex justify-center gap-4 mt-6 px-4">
-            {tickets.map((ticket, index) =>
-              Array.from({ length: Number(ticket.numberOfTickets) }).map(
-                (_, i) => {
-                  const currentSeatNumber =
-                    Number(ticket.startingSeatNumber) + i;
-                  return (
-                    <label
-                      key={`${index} - ${i}`}
-                      className={`bg-white rounded-lg w-20 text-center cursor-pointer border ${
-                        selectedSeats.includes(currentSeatNumber)
-                          ? "border-blue-600"
-                          : "border-gray-300"
-                      }`}
-                    >
-                      <p className="bg-blue-600 text-white rounded-t-md py-1 text-sm">
-                        SEAT {currentSeatNumber}
-                      </p>
+            <div className="flex justify-center gap-4 mt-6 px-4 pb-10 sm:pb-4 border-b border-b-gray-400">
+              {tickets.map((ticket, index) =>
+                Array.from({ length: Number(ticket.numberOfTickets) }).map(
+                  (_, i) => {
+                    const currentSeatNumber =
+                      Number(ticket.startingSeatNumber) + i;
+                    return (
+                      <label
+                        key={`${index} - ${i}`}
+                        className={`bg-white rounded-lg w-20 text-center cursor-pointer border ${
+                          selectedSeats.includes(currentSeatNumber)
+                            ? "border-blue-600"
+                            : "border-gray-300"
+                        }`}
+                      >
+                        <p className="bg-blue-600 text-white rounded-t-md py-1 text-sm">
+                          SEAT {currentSeatNumber}
+                        </p>
 
-                      <div className="w-full h-12 flex items-center justify-center">
-                        <input
-                          type="checkbox"
-                          className="hidden"
-                          checked={selectedSeats.includes(currentSeatNumber)}
-                          onChange={() => handleSeatToggle(currentSeatNumber)}
-                        />
-                        <div
-                          className={`w-6 h-6 rounded-full border flex items-center justify-center ${
-                            selectedSeats.includes(currentSeatNumber)
-                              ? "bg-blue-600 border-blue-600"
-                              : "border-gray-300"
-                          }`}
-                        >
-                          {selectedSeats.includes(currentSeatNumber) && (
-                            <Check className="text-white" size={16} />
-                          )}
+                        <div className="w-full h-12 flex items-center justify-center">
+                          <input
+                            type="checkbox"
+                            className="hidden"
+                            checked={selectedSeats.includes(currentSeatNumber)}
+                            onChange={() => handleSeatToggle(currentSeatNumber)}
+                          />
+                          <div
+                            className={`w-6 h-6 rounded-full border flex items-center justify-center ${
+                              selectedSeats.includes(currentSeatNumber)
+                                ? "bg-blue-600 border-blue-600"
+                                : "border-gray-300"
+                            }`}
+                          >
+                            {selectedSeats.includes(currentSeatNumber) && (
+                              <Check className="text-white" size={16} />
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </label>
-                  );
-                }
-              )
-            )}
-          </div>
-
-          <div className="sticky bottom-0 left-0 right-0 px-4 py-4 bg-white border-t border-gray-200 mt-auto">
-            <div className="flex justify-between items-center">
-              <p className="text-gray-500">{selectedSeats.length} Tickets</p>
-              <button
-                onClick={() => {
-                  if (selectedSeats.length > 0) {
-                    setShowTransferForm(true);
-                    setShowTransfer(false);
+                      </label>
+                    );
                   }
-                }}
-                disabled={selectedSeats.length === 0}
-                className="flex items-center text-blue-600 font-medium disabled:text-gray-400"
-              >
-                <span>Transfer to</span>
-                <ChevronRight size={20} />
-              </button>
+                )
+              )}
+            </div>
+
+            <div className="sticky bottom-0 left-0 right-0 px-4 py-4 bg-[#fefcfc] border-t border-gray-200 mt-auto">
+              <div className="flex justify-between items-center">
+                <p className="text-gray-500">{selectedSeats.length} Selected</p>
+                <button
+                  onClick={() => {
+                    if (selectedSeats.length > 0) {
+                      setShowTransferForm(true);
+                      setShowTransfer(false);
+                    }
+                  }}
+                  disabled={selectedSeats.length === 0}
+                  className="flex items-center text-blue-600 font-bold uppercase text-[18px] sm:text-[16px] disabled:text-gray-400"
+                >
+                  <span className="text-[#339af0]">Transfer to</span>
+                  <ChevronRight size={20} className="text-[#339af0]" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div
         className={`fixed inset-0 bg-white z-50 transition-transform ${
@@ -317,22 +357,27 @@ const TicketCardSlider: React.FC = () => {
                   key={`${index}-${i}`}
                   className="flex gap-2 justify-center"
                 >
-                  <div className="w-66 custom-width sm:w-88 mx-auto my-4 border border-gray-200">
-                    <div className="bg-blue-600 text-white rounded-t-sm text-center py-2">
+                  <div className="w-72 custom-width sm:w-88 mx-auto my-4 border border-gray-200 rounded-xl">
+                    <div className="bg-[#185ecd] text-white rounded-t-xl text-center py-3">
                       <p className="text-sm font-medium">Standard Ticket</p>
                     </div>
 
-                    <div className="flex justify-between px-4 py-2 h-16 bg-blue-500 text-white">
+                    <div className="flex gap-10 justify-center items-center px-4 py-3 pb-4 h-fit bg-[#046be2] text-white">
                       <div className="text-center">
                         <p className="text-xs font-medium">SEC</p>
                         <p className="font-bold">{ticket.section || "GA"}</p>
                       </div>
-                      <div className="text-center">
+                      <div className="text-center basis-[30%]">
                         <p className="text-xs">ROW</p>
                         <p className="font-bold">
-                          {ticket.generalAdmission
-                            ? "General Admission"
-                            : ticket.row}
+                          {ticket.generalAdmission ? (
+                            <span>
+                              <p className="block">General</p>
+                              <p className="block">Admission</p>
+                            </span>
+                          ) : (
+                            ticket.row
+                          )}
                         </p>
                       </div>
                       <div className="text-center">
@@ -378,7 +423,7 @@ const TicketCardSlider: React.FC = () => {
                       </div>
                     </div>
 
-                    <div className="mx-auto w-[85%] my-6 text-center text-white bg-blue-600 flex gap-3 p-2 justify-center items-center">
+                    <div className="mx-auto w-[85%] my-6 text-center text-white bg-[#026ae7] flex gap-3 p-2 justify-center items-center">
                       <BarcodeIcon />
                       <p className="text-sm">View Barcode</p>
                     </div>
@@ -387,7 +432,7 @@ const TicketCardSlider: React.FC = () => {
                       Ticket Details
                     </p>
 
-                    <div className="text-white gap-1.5 text-[12px] bg-blue-600 flex items-center justify-center py-1 rounded-b-md">
+                    <div className="text-white gap-1.5 text-[12px] bg-[#175fcb] flex items-center justify-center py-1 rounded-b-md">
                       <Tickets />
                       <p>ticketmaster.verified</p>
                     </div>
@@ -405,11 +450,11 @@ const TicketCardSlider: React.FC = () => {
         <div className="flex justify-center w-82 sm:w-88 my-7 gap-4 mx-auto">
           <Button
             onClick={handleTransferTo}
-            className="flex-1 bg-blue-600 text-white"
+            className="flex-1 bg-[#036ce2] text-white"
           >
             Transfer
           </Button>
-          <Button className="flex-1 bg-blue-600 text-white">Sell</Button>
+          <Button className="flex-1 bg-[#036ce2] text-white">Sell</Button>
         </div>
       )}
 
