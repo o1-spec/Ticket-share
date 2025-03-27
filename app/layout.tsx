@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   title: "Ticketmaster",
   description: "A ticket management system",
   icons: {
-    icon: "/icon.png",
+    icon: "/icon-v2.png",
   },
 };
 
