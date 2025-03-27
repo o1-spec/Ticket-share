@@ -55,7 +55,7 @@ interface TaskCardSliderProps {
   showTransfer: boolean;
 }
 
-const TicketCardSlider: React.FC<TaskCardSliderProps> = ({
+const TicketCardSlider = ({
   setShowTransfer,
   showTransfer,
 }: TaskCardSliderProps) => {
