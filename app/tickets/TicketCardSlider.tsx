@@ -387,7 +387,7 @@ const TicketCardSlider = ({
                       </div>
                     </div>
 
-                    <div className="relative h-60">
+                    <div className="relative h-64">
                       <Image
                         src={ticket.eventImage || test}
                         alt="Event Image"
