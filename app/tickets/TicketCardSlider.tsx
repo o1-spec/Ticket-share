@@ -37,18 +37,18 @@ import Link from "next/link";
 //   },
 // ];
 
-interface Ticket {
-  theme: string;
-  venue: string;
-  date: string;
-  time: string;
-  section: string;
-  row: string;
-  generalAdmission: boolean;
-  startingSeatNumber: string;
-  numberOfTickets: string;
-  eventImage: string | null;
-}
+// interface Ticket {
+//   theme: string;
+//   venue: string;
+//   date: string;
+//   time: string;
+//   section: string;
+//   row: string;
+//   generalAdmission: boolean;
+//   startingSeatNumber: string;
+//   numberOfTickets: string;
+//   eventImage: string | null;
+// }
 
 interface TaskCardSliderProps {
   setShowTransfer: (value: boolean) => void;

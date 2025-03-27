@@ -1,7 +1,7 @@
 // File: app/page.tsx - Main page component
 "use client";
 import { useState } from "react";
-import TicketCardSlider from "./tickets/page";
+import TicketCardSlider from "./tickets/TicketCardSlider";
 
 export default function Home() {
   const [showTransfer, setShowTransfer] = useState<boolean>(false);
