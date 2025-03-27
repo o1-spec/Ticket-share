@@ -4,7 +4,7 @@ import { useState } from "react";
 import TicketCardSlider from "./tickets/page";
 
 export default function Home() {
-  const [showTransfer, setShowTransfer] = useState(false);
+  const [showTransfer, setShowTransfer] = useState<boolean>(false);
 
   const handleOutsideClick = () => {
     setShowTransfer(false);

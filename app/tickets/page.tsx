@@ -12,12 +12,9 @@ import {
   BarcodeIcon,
   ChevronLeft,
   ChevronRight,
-  X,
   Check,
   Ticket,
   Tickets,
-  WarehouseIcon,
-  Info,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -53,15 +50,15 @@ interface Ticket {
   eventImage: string | null;
 }
 
-interface TaskCardSlider {
+interface TaskCardSliderProps {
   setShowTransfer: (value: boolean) => void;
   showTransfer: boolean;
 }
 
-const TicketCardSlider: React.FC<TaskCardSlider> = ({
+const TicketCardSlider: React.FC<TaskCardSliderProps> = ({
   setShowTransfer,
   showTransfer,
-}: TaskCardSlider) => {
+}: TaskCardSliderProps) => {
   // const [showTransfer, setShowTransfer] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [showTransferForm, setShowTransferForm] = useState(false);
@@ -87,10 +84,10 @@ const TicketCardSlider: React.FC<TaskCardSlider> = ({
   };
 
   useEffect(() => {
-    const handleClickOutside = (event: { target: any }) => {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         transferBoxRef.current &&
-        !transferBoxRef.current.contains(event.target)
+        !transferBoxRef.current.contains(event.target as Node)
       ) {
         console.log("Clicked outside");
         setShowTransfer(false);
@@ -104,7 +101,7 @@ const TicketCardSlider: React.FC<TaskCardSlider> = ({
     }
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showTransfer]);
+  }, [setShowTransfer, showTransfer]);
 
   return (
     <div className="relative w-full h-full bg-white max-w-md mx-auto">

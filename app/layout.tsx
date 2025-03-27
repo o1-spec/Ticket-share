@@ -1,21 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Serif, Montserrat, Roboto } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 import { TicketProvider } from "./_components/TicketContext";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-
-const Manrope_font = Montserrat({
-  weight: ["400", "700"],
-  style: ["normal"],
-  subsets: ["latin"],
-});
-
-const ibmPlexSerif = IBM_Plex_Serif({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-ibm-plex-serif",
-});
 
 const Roboto_Font = Roboto({
   subsets: ["latin"],
