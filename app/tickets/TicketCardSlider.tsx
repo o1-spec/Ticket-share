@@ -107,7 +107,7 @@ const TicketCardSlider = ({
     <div className="relative w-full h-full bg-white max-w-md mx-auto">
       {showTransfer && (
         <div
-          className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl h-[65vh] ${
+          className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl h-[56vh] ${
             showTransfer ? "translate-y-0" : "translate-y-full"
           } transform`}
         >
@@ -354,12 +354,12 @@ const TicketCardSlider = ({
                   key={`${index}-${i}`}
                   className="flex gap-2 justify-center"
                 >
-                  <div className="w-72 custom-width sm:w-88 mx-auto my-4 border border-gray-200 rounded-xl -translate-y-2">
+                  <div className="w-72 custom-width sm:w-88 mx-auto my-4 border border-gray-200 rounded-xl -translate-y-3">
                     <div className="bg-[#185ecd] text-white rounded-t-xl text-center py-3">
                       <p className="text-sm font-medium">Standard Ticket</p>
                     </div>
 
-                    <div className="flex gap-10 justify-center items-center px-4 py-3 pb-4 h-fit bg-[#046be2] text-white">
+                    <div className="flex gap-10 justify-center items-center px-4 py-3.5 pb-4 h-fit bg-[#046be2] text-white">
                       <div className="text-center">
                         <p className="text-xs font-medium">SEC</p>
                         <p className="font-bold">{ticket.section || "GA"}</p>
@@ -420,16 +420,16 @@ const TicketCardSlider = ({
                       </div>
                     </div>
 
-                    <div className="mx-auto w-[85%] my-6 text-center text-white bg-[#026ae7] flex gap-3 p-2 justify-center items-center">
+                    <div className="mx-auto w-[85%] my-6 mt-8 text-center text-white bg-[#026ae7] flex gap-3 p-2 justify-center items-center">
                       <BarcodeIcon />
-                      <p className="text-sm">View Barcode</p>
+                      <p className="text-sm text-[#97c6f3]">View Barcode</p>
                     </div>
 
-                    <p className="text-blue-600 text-center my-6 font-bold">
+                    <p className="text-[#226dbd] text-center my-6 font-bold">
                       Ticket Details
                     </p>
 
-                    <div className="text-white gap-1.5 text-[12px] bg-[#175fcb] flex items-center justify-center py-1 rounded-b-md">
+                    <div className="text-white gap-1.5 text-[12px] bg-[#175fcb] flex items-center justify-center py-2 rounded-b-xl">
                       <Tickets />
                       <p>ticketmaster.verified</p>
                     </div>
@@ -444,14 +444,16 @@ const TicketCardSlider = ({
       </div>
 
       {tickets.length > 0 && (
-        <div className="flex justify-center w-82 sm:w-88 my-7 gap-4 mx-auto">
+        <div className="flex justify-center w-74 custom-width sm:w-88  my-7 gap-1 mx-auto">
           <Button
             onClick={handleTransferTo}
-            className="flex-1 bg-[#036ce2] text-white"
+            className="flex-1 bg-[#036ce2] text-[#97c6f3] text-[12px]"
           >
             Transfer
           </Button>
-          <Button className="flex-1 bg-[#036ce2] text-white">Sell</Button>
+          <Button className="flex-1 bg-[#036ce2] text-[#97c6f3] text-[12px]">
+            Sell
+          </Button>
         </div>
       )}
 
