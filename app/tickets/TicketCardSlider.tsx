@@ -153,7 +153,7 @@ const TicketCardSlider = ({
               </div>
             </div>
 
-            <div className="flex justify-center gap-4 mt-6 px-4 pb-10 sm:pb-4 border-b border-b-gray-400">
+            <div className="flex gap-4 mt-6 px-4 pb-10 sm:pb-4 border-b border-b-gray-400">
               {tickets.map((ticket, index) =>
                 Array.from({ length: Number(ticket.numberOfTickets) }).map(
                   (_, i) => {
@@ -359,7 +359,7 @@ const TicketCardSlider = ({
                       <p className="text-sm font-medium">Standard Ticket</p>
                     </div>
 
-                    <div className="flex gap-10 justify-center items-center px-4 py-3.5 pb-4 h-fit bg-[#046be2] text-white">
+                    <div className="flex gap-10 justify-center items-start px-4 py-4 pb-4 h-fit bg-[#046be2] text-white">
                       <div className="text-center">
                         <p className="text-xs font-medium">SEC</p>
                         <p className="font-bold">{ticket.section || "GA"}</p>
@@ -425,7 +425,7 @@ const TicketCardSlider = ({
                       <p className="text-sm text-[#97c6f3]">View Barcode</p>
                     </div>
 
-                    <p className="text-[#226dbd] text-center my-6 font-bold">
+                    <p className="text-[#226dbd] text-center text-[14px] my-6 font-bold">
                       Ticket Details
                     </p>
 
@@ -444,7 +444,7 @@ const TicketCardSlider = ({
       </div>
 
       {tickets.length > 0 && (
-        <div className="flex justify-center w-74 custom-width sm:w-88  my-7 gap-1 mx-auto">
+        <div className="flex justify-center w-74 custom-width sm:w-88  my-7 gap-1 mx-auto -translate-x-5">
           <Button
             onClick={handleTransferTo}
             className="flex-1 bg-[#036ce2] text-[#97c6f3] text-[12px]"
