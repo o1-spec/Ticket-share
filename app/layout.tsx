@@ -3,7 +3,6 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { TicketProvider } from "./_components/TicketContext";
 
-
 const Roboto_Font = Roboto({
   subsets: ["latin"],
   weight: ["400", "700"],
@@ -23,9 +22,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-white">
       <body className={`${Roboto_Font.className}`}>
-        <div className="text-white py-3 text-center w-full text-3xl bg-[#036ce2]">
-          TicketMaster
-        </div>
         <TicketProvider>{children}</TicketProvider>
       </body>
     </html>

@@ -354,7 +354,7 @@ const TicketCardSlider = ({
                   key={`${index}-${i}`}
                   className="flex gap-2 justify-center"
                 >
-                  <div className="w-72 custom-width sm:w-88 mx-auto my-4 border border-gray-200 rounded-xl">
+                  <div className="w-72 custom-width sm:w-88 mx-auto my-4 border border-gray-200 rounded-xl -translate-y-2">
                     <div className="bg-[#185ecd] text-white rounded-t-xl text-center py-3">
                       <p className="text-sm font-medium">Standard Ticket</p>
                     </div>
