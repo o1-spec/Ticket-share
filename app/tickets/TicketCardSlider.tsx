@@ -359,7 +359,7 @@ const TicketCardSlider = ({
                       <p className="text-sm font-medium">Standard Ticket</p>
                     </div>
 
-                    <div className="flex gap-10 justify-center items-start px-4 py-4 pb-4 h-fit bg-[#046be2] text-white">
+                    <div className="flex gap-10 justify-center items-start px-4 py-5 h-fit bg-[#046be2] text-white">
                       <div className="text-center">
                         <p className="text-xs font-medium">SEC</p>
                         <p className="font-bold">{ticket.section || "GA"}</p>
@@ -387,13 +387,13 @@ const TicketCardSlider = ({
                       </div>
                     </div>
 
-                    <div className="relative h-52">
+                    <div className="relative h-60">
                       <Image
                         src={ticket.eventImage || test}
                         alt="Event Image"
                         width={400}
                         height={200}
-                        className="object-cover h-[200px]"
+                        className="object-cover h-[240px]"
                       />
 
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
@@ -429,7 +429,7 @@ const TicketCardSlider = ({
                       Ticket Details
                     </p>
 
-                    <div className="text-white gap-1.5 text-[12px] bg-[#175fcb] flex items-center justify-center py-2 rounded-b-xl">
+                    <div className="text-white gap-1.5 text-[12px] bg-[#175fcb] flex items-center justify-center py-2.5 rounded-b-xl">
                       <Tickets />
                       <p>ticketmaster.verified</p>
                     </div>
