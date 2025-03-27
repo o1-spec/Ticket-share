@@ -21,9 +21,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-white">
-      <body className={`${Roboto_Font.className} relative`}>
-        <div className="absolute top-0 right-0 bottom-0 left-0 bg-black z-[12321]"></div>
-        <TicketProvider>{children}</TicketProvider>
+      <body className={`${Roboto_Font.className}`}>
+        \<TicketProvider>{children}</TicketProvider>
       </body>
     </html>
   );
