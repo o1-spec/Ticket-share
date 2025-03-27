@@ -387,13 +387,13 @@ const TicketCardSlider = ({
                       </div>
                     </div>
 
-                    <div className="relative h-64">
+                    <div className="relative h-70">
                       <Image
                         src={ticket.eventImage || test}
                         alt="Event Image"
                         width={400}
                         height={200}
-                        className="object-cover h-[240px]"
+                        className="object-cover h-[280px]"
                       />
 
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
