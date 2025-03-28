@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import "./globals.css";
-import { TicketProvider } from "./_components/TicketContext";
+// import { TicketProvider } from "./_components/TicketContext";
 
 const Roboto_Font = Roboto({
   subsets: ["latin"],
@@ -17,9 +17,8 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+export default function RootLayout({}: // children,
+Readonly<{
   children: React.ReactNode;
 }>) {
   return (
