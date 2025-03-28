@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="bg-white">
       <body className={`${Roboto_Font.className}`}>
-        <TicketProvider>{children}</TicketProvider>
+        {/* <TicketProvider>{children}</TicketProvider> */}
       </body>
     </html>
   );
