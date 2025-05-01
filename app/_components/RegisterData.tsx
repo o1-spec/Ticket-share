@@ -15,10 +15,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useTickets, TicketFormData } from "./TicketContext";
 
-// Initial form state (without ID as it will be generated)
-
-const IMGBB_API_KEY = "198f4cb88bd84077426a3813645c61f9";
-
 const initialFormState: Omit<TicketFormData, "id"> = {
   theme: "",
   venue: "",
@@ -29,100 +25,76 @@ const initialFormState: Omit<TicketFormData, "id"> = {
   startingSeatNumber: "",
   numberOfTickets: "",
   generalAdmission: false,
-  eventImage: "",
+  eventImage: "", 
   seat: "",
 };
 
-//198f4cb88bd84077426a3813645c61f9
+const requiredFields = ["theme", "venue", "date", "time", "section", "row", "startingSeatNumber", "numberOfTickets"];
 
 const TicketGenerationForm: React.FC = () => {
-  // Get addTicket function from context
   const { addTicket } = useTickets();
 
-  // State for the current form
-  const [formData, setFormData] =
+  const [formData, setFormData] = 
     useState<Omit<TicketFormData, "id">>(initialFormState);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
-  console.log(uploading);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_submitted, setSubmitted] = useState(false);
+  
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked, files } = e.target;
-    if (type === "file" && files) {
-      setImageFile(files[0]);
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]:
-          type === "checkbox"
-            ? checked
-            : type === "file"
-            ? files?.[0] || null
-            : value,
-      }));
+    const { name, value, type, checked } = e.target;
+    
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = {...prev};
+        delete newErrors[name];
+        return newErrors;
+      });
     }
   };
 
-  const uploadImage = async (file: File) => {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    try {
-      const response = await fetch(
-        `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await response.json();
-      if (data.success) {
-        return data.data.url;
-      } else {
-        throw new Error("Image upload failed");
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+      if (!formData[field as keyof typeof formData]) {
+        newErrors[field] = `${field.replace(/([A-Z])/g, " $1").charAt(0).toUpperCase() + field.replace(/([A-Z])/g, " $1").slice(1)} is required`;
+        isValid = false;
       }
-    } catch (error) {
-      console.error("Error uploading image:", error);
-      return null;
+    });
+    
+    if (formData.numberOfTickets && parseInt(formData.numberOfTickets as string) <= 0) {
+      newErrors.numberOfTickets = "Number of tickets must be greater than 0";
+      isValid = false;
     }
+    
+    setErrors(newErrors);
+    return isValid;
   };
-
-  // const handleCheckboxChange = (checked: boolean) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     generalAdmission: checked,
-  //   }));
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsGenerating(true);
-    setUploading(true);
-
-    let imageUrl = formData.eventImage;
-
-    if (imageFile) {
-      const uploadedUrl = await uploadImage(imageFile);
-      if (uploadedUrl) {
-        imageUrl = uploadedUrl;
-      } else {
-        alert("Failed to upload image. Please try again.");
-        setUploading(false);
-        setIsGenerating(false);
-        return;
-      }
+    setSubmitted(true);
+    
+    // Validate form
+    if (!validateForm()) {
+      return;
     }
+    
+    setIsGenerating(true);
 
-    // Finalize form data with image URL
-    const newTicket = { ...formData, eventImage: imageUrl };
+    const newTicket = { ...formData };
 
-    // Add to ticket context
     addTicket(newTicket);
 
-    // Save to local storage
     const storedTickets = JSON.parse(
       localStorage.getItem("ticketData") || "[]"
     );
@@ -131,15 +103,18 @@ const TicketGenerationForm: React.FC = () => {
       JSON.stringify([...storedTickets, newTicket])
     );
 
-    // Reset form
-    setFormData(initialFormState);
-    setImageFile(null);
-    setUploading(false);
-    setIsGenerating(false); // Stop loading
-
-    // Navigate to homepage
-    router.push("/");
+    setTimeout(() => {
+      setFormData(initialFormState);
+      setIsGenerating(false);
+      setSubmitted(false);
+      
+      router.push("/");
+    }, 1000);
   };
+
+  const ErrorMessage = ({ message }: { message: string }) => (
+    <p className="text-red-500 text-sm mt-1">{message}</p>
+  );
 
   return (
     <div className="p-6 rounded-md max-w-md mx-auto">
@@ -155,8 +130,9 @@ const TicketGenerationForm: React.FC = () => {
             name="theme"
             value={formData.theme}
             onChange={handleChange}
-            className="w-full"
+            className={`w-full ${errors.theme ? "border-red-500" : "border-gray-300"}`}
           />
+          {errors.theme && <ErrorMessage message={errors.theme} />}
         </div>
 
         {/* Venue */}
@@ -167,8 +143,9 @@ const TicketGenerationForm: React.FC = () => {
             name="venue"
             value={formData.venue}
             onChange={handleChange}
-            className="w-full"
+            className={`w-full ${errors.venue ? "border-red-500" : "border-gray-300"}`}
           />
+          {errors.venue && <ErrorMessage message={errors.venue} />}
         </div>
 
         {/* Date Picker */}
@@ -178,7 +155,9 @@ const TicketGenerationForm: React.FC = () => {
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full flex justify-between px-3 py-2 border-gray-300 bg-white text-gray-800 rounded-md shadow-sm hover:bg-gray-50"
+                className={`w-full flex justify-between px-3 py-2 ${
+                  errors.date ? "border-red-500" : "border-gray-300"
+                } bg-white text-gray-800 rounded-md shadow-sm hover:bg-gray-50`}
               >
                 {formData.date
                   ? format(formData.date, "MM/dd/yyyy")
@@ -190,12 +169,20 @@ const TicketGenerationForm: React.FC = () => {
               <Calendar
                 mode="single"
                 selected={formData.date}
-                onSelect={(date) =>
-                  setFormData((prev) => ({ ...prev, date: date || undefined }))
-                }
+                onSelect={(date) => {
+                  setFormData((prev) => ({ ...prev, date: date || undefined }));
+                  if (errors.date) {
+                    setErrors(prev => {
+                      const newErrors = {...prev};
+                      delete newErrors.date;
+                      return newErrors;
+                    });
+                  }
+                }}
               />
             </PopoverContent>
           </Popover>
+          {errors.date && <ErrorMessage message={errors.date} />}
         </div>
 
         {/* Time Input */}
@@ -206,8 +193,11 @@ const TicketGenerationForm: React.FC = () => {
             name="time"
             value={formData.time}
             onChange={handleChange}
-            className="w-full text-gray-700 border-gray-300 bg-white px-3 py-2 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            className={`w-full text-gray-700 ${
+              errors.time ? "border-red-500" : "border-gray-300"
+            } bg-white px-3 py-2 rounded-md shadow-sm focus:border-blue-500 focus:ring-blue-500`}
           />
+          {errors.time && <ErrorMessage message={errors.time} />}
         </div>
 
         {/* Other Inputs */}
@@ -222,40 +212,27 @@ const TicketGenerationForm: React.FC = () => {
                 name={field}
                 value={String(formData[field as keyof typeof formData] || "")}
                 onChange={handleChange}
-                className="w-full border-gray-300"
+                className={`w-full ${
+                  errors[field] ? "border-red-500" : "border-gray-300"
+                }`}
               />
+              {errors[field] && <ErrorMessage message={errors[field]} />}
             </div>
           )
         )}
 
-        {/* Checkbox */}
-        {/* <div className="flex items-center space-x-2">
-          <Checkbox
-            id="generalAdmission"
-            name="generalAdmission"
-            className="border-gray-300"
-            checked={formData.generalAdmission}
-            onCheckedChange={handleCheckboxChange}
-          />
-          <Label
-            htmlFor="generalAdmission"
-            className="text-gray-700 font-medium"
-          >
-            General Admission
-          </Label>
-        </div> */}
-
-        {/* File Upload */}
+        {/* Image URL Input */}
         <div>
           <Label className="text-gray-700 font-medium">
-            Add Event Image (optional)
+            Event Image URL
           </Label>
           <Input
-            type="file"
+            type="text"
+            placeholder="https://example.com/image.jpg"
             className="w-full border-gray-300"
             name="eventImage"
+            value={formData.eventImage || ""}
             onChange={handleChange}
-            accept="image/*"
           />
         </div>
 
