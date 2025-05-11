@@ -17,8 +17,8 @@ export interface TicketFormData {
   time: string;
   section: string;
   row: string;
-  startingSeatNumber: string;
-  numberOfTickets: string;
+  startingSeat: string;
+  NumberOfTickets: string;
   generalAdmission: boolean;
   eventImage?: string | null;
   seat: string;

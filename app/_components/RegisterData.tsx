@@ -22,8 +22,8 @@ const initialFormState: Omit<TicketFormData, "id"> = {
   time: "",
   section: "",
   row: "",
-  startingSeatNumber: "",
-  numberOfTickets: "",
+  startingSeat: "",
+  NumberOfTickets: "",
   generalAdmission: false,
   eventImage: "", 
   seat: "",
@@ -71,7 +71,7 @@ const TicketGenerationForm: React.FC = () => {
       }
     });
     
-    if (formData.numberOfTickets && parseInt(formData.numberOfTickets as string) <= 0) {
+    if (formData.NumberOfTickets && parseInt(formData.NumberOfTickets as string) <= 0) {
       newErrors.numberOfTickets = "Number of tickets must be greater than 0";
       isValid = false;
     }
@@ -201,7 +201,7 @@ const TicketGenerationForm: React.FC = () => {
         </div>
 
         {/* Other Inputs */}
-        {["section", "row", "startingSeatNumber", "numberOfTickets"].map(
+        {["section", "row", "startingSeat", "NumberOfTickets"].map(
           (field) => (
             <div key={field}>
               <Label className="text-gray-700 font-semi-bold pb-2">

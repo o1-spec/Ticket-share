@@ -155,10 +155,10 @@ const TicketCardSlider = ({
 
             <div className="flex gap-4 mt-6 px-4 pb-10 sm:pb-4 border-b border-b-gray-400">
               {tickets.map((ticket, index) =>
-                Array.from({ length: Number(ticket.numberOfTickets) }).map(
+                Array.from({ length: Number(ticket.NumberOfTickets) }).map(
                   (_, i) => {
                     const currentSeatNumber =
-                      Number(ticket.startingSeatNumber) + i;
+                      Number(ticket.startingSeat) + i;
                     return (
                       <label
                         key={`${index} - ${i}`}
@@ -348,7 +348,7 @@ const TicketCardSlider = ({
           }}
         >
           {tickets.map((ticket, index) =>
-            Array.from({ length: Number(ticket.numberOfTickets) }).map(
+            Array.from({ length: Number(ticket.NumberOfTickets) }).map(
               (_, i) => (
                 <SwiperSlide
                   key={`${index}-${i}`}
@@ -380,8 +380,8 @@ const TicketCardSlider = ({
                       <div className="text-center">
                         <p className="text-xs">SEAT</p>
                         <p className="font-bold">
-                          {ticket.startingSeatNumber
-                            ? Number(ticket.startingSeatNumber) + i
+                          {ticket.startingSeat
+                            ? Number(ticket.startingSeat) + i
                             : "-"}
                         </p>
                       </div>
@@ -431,7 +431,7 @@ const TicketCardSlider = ({
 
                     <div className="text-white gap-1.5 text-[12px] bg-[#175fcb] flex items-center justify-center py-2.5 rounded-b-xl">
                       <Tickets />
-                      <p>ticketmaster.verified</p>
+                      <p className="italic">ticketmaster.verified</p>
                     </div>
                   </div>
                 </SwiperSlide>
